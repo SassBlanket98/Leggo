@@ -11,6 +11,8 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
+import android.os.Bundle
+import com.facebook.react.ReactActivity // Added import for ReactActivity
 
 class MainApplication : Application(), ReactApplication {
 
@@ -41,4 +43,12 @@ class MainApplication : Application(), ReactApplication {
       load()
     }
   }
+}
+
+class MainActivity : ReactActivity() {
+  //... other code
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(null) // null for react-native-screens, or savedInstanceState if not using it
+  }
+  //...
 }
