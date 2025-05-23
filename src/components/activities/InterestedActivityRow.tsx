@@ -1,9 +1,9 @@
 // src/components/activities/InterestedActivityRow.tsx
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native-web';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Activity } from '../../types/activityTypes.ts';
 import { theme } from '../../constants/theme.ts';
-import Icon from 'react-native-vector-icons/Ionicons.ts';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface InterestedActivityRowProps {
   activity: Activity;
@@ -36,7 +36,7 @@ const InterestedActivityRow: React.FC<InterestedActivityRowProps> = ({
         </Text>
       </View>
       <TouchableOpacity onPress={onUnmark} style={styles.unmarkButton}>
-        <Icon name="trash-outline" size={24} color={theme.colors.error} />
+        <Ionicons name="trash-outline" size={24} color={theme.colors.error} />
       </TouchableOpacity>
     </TouchableOpacity>
   );

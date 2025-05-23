@@ -2,7 +2,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppStore } from '../state/store.ts'; // Adjusted path
 import { AppState } from '../state/store.ts'; // Import AppState, adjusted path
 import { View, Text, ActivityIndicator } from 'react-native-web'; // Import View and Text
@@ -90,7 +90,7 @@ function ProfileNavigator() {
 function MainAppNavigator() {
   return (
     <MainTabs.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={({ route }: { route: any }) => ({
         headerShown: false, // Hide header for individual tabs, manage in stacks
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.darkGray,
@@ -98,18 +98,28 @@ function MainAppNavigator() {
           backgroundColor: theme.colors.background,
           borderTopColor: theme.colors.lightGray,
         },
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({
+          focused,
+          color,
+          size,
+        }: {
+          focused: boolean;
+          color: string;
+          size: number;
+        }) => {
           let iconName = '';
+
           if (route.name === 'DiscoverTab') {
             iconName = focused ? 'compass' : 'compass-outline';
           } else if (route.name === 'MyPlannedTab') {
-            iconName = focused ? 'calendar' : 'calendar-outline';
+            iconName = focused ? 'calendar-check' : 'calendar-check-outline';
           } else if (route.name === 'CreateActivityTab') {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
+            iconName = focused ? 'plus-circle' : 'plus-circle-outline';
           } else if (route.name === 'ProfileTab') {
-            iconName = focused ? 'person' : 'person-outline';
+            iconName = focused ? 'account-circle' : 'account-circle-outline';
           }
-          return <Icon name={iconName} size={size} color={color} />;
+          // You can return any component that you like here!
+          return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },
       })}
     >

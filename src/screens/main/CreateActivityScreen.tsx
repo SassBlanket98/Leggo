@@ -6,13 +6,12 @@ import {
   TextInput,
   Button,
   StyleSheet,
-  // Alert, // Alert will be imported from 'react-native'
   ScrollView,
   TouchableOpacity,
   Platform,
   ActivityIndicator,
-} from 'react-native-web';
-import { Alert } from 'react-native';
+  Alert,
+} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useAppStore } from '../../state/store.ts';
 import { Activity, ActivityCategory } from '../../types/activityTypes.ts';

@@ -1,14 +1,6 @@
 // src/screens/auth/SignupScreen.tsx
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-} from 'react-native-web';
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useAppStore } from '../../state/store.ts';
 import { authService } from '../../services/authService.ts';
 import { theme } from '../../constants/theme.ts';

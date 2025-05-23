@@ -1,6 +1,6 @@
 // src/screens/main/MyPlannedActivitiesScreen.tsx
 import React, { useMemo } from 'react';
-import { View, Text, FlatList, StyleSheet, Alert } from 'react-native-web'; // Reverted to react-native-web and will use type-only import for StyleSheet
+import { View, Text, FlatList, StyleSheet, Alert } from 'react-native'; // Reverted to react-native-web and will use type-only import for StyleSheet
 import { useAppStore } from '../../state/store.ts';
 import { Activity } from '../../types/activityTypes.ts';
 import InterestedActivityRow from '../../components/activities/InterestedActivityRow.tsx';

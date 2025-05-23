@@ -2,6 +2,7 @@
   "name": "Leggo",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "lint": "eslint. --ext.js,.jsx,.ts,.tsx",
     "lint:fix": "eslint. --ext.js,.jsx,.ts,.tsx --fix",
@@ -27,6 +28,7 @@
     "react-native-swipeable-card-stack": "^2.0.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0",
+    "react-navigation": "^5.0.0",
     "zustand": "^5.0.5"
   },
   "devDependencies": {

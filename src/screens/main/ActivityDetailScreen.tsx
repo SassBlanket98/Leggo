@@ -5,12 +5,13 @@ import {
   Text,
   Image,
   ScrollView,
-  Button,
-  Alert,
+  StyleSheet, // Ensure StyleSheet is imported from react-native
   ActivityIndicator,
-  StyleSheet,
-} from 'react-native-web';
-import { useRoute, RouteProp } from '@react-navigation/native';
+  Button,
+  Alert, // Import Alert from react-native
+} from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import type { RouteProp } from '@react-navigation/core'; // Correct import for RouteProp
 import { useAppStore } from '../../state/store.ts';
 import { Activity } from '../../types/activityTypes.ts';
 import { theme } from '../../constants/theme.ts';

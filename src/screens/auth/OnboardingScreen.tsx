@@ -18,17 +18,20 @@ const OnboardingScreen: React.FC = () => {
       <Text style={styles.subtitle}>Discover and plan your next adventure.</Text>
       <View style={styles.buttonContainer}>
         <Button
-          title="Login"
+          mode="contained"
           onPress={() => navigation.navigate('Login')}
           color={theme.colors.primary}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
+        >
+          Login
+        </Button>
         <Button
-          title="Sign Up"
+          mode="contained"
           onPress={() => navigation.navigate('Signup')}
           color={theme.colors.secondary}
-        />
+        >
+          Sign Up
+        </Button>
+        <Button color={theme.colors.secondary} children={undefined} />
       </View>
     </View>
   );

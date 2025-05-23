@@ -1,12 +1,12 @@
 // src/screens/main/DiscoverActivitiesScreen.tsx
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native-web';
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAppStore } from '../../state/store.ts';
 import { Activity } from '../../types/activityTypes.ts';
 import ActivityCard from '../../components/activities/ActivityCard.tsx';
 import { theme } from '../../constants/theme.ts';
 import { DiscoverScreenProps } from '../../navigation/navigationTypes.ts'; // For navigation.navigate
-import { SwipeableCardStack, CardContainerRef } from 'react-native-swipeable-card-stack'; // Adjusted import
+import { SwipeableCardStack } from 'react-native-swipeable-card-stack'; // Adjusted import
 
 const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities'>> = ({
   navigation,
@@ -23,7 +23,7 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
     return allActivities.filter(act => !interestedActivityIds.includes(act.id));
   }, [allActivities, interestedActivityIds]);
 
-  const cardStackRef = useRef<CardContainerRef>(null);
+  const cardStackRef = useRef<React.ElementRef<typeof SwipeableCardStack>>(null);
 
   useEffect(() => {
     if (discoverableActivities.length > 0) {
@@ -88,14 +88,14 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
       <View style={styles.actionButtonsContainer}>
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={() => cardStackRef.current?.swipeLeft()} // Corrected onPress prop
+          onClick={() => cardStackRef.current?.swipeLeft()} // Changed to onClick for web compatibility
         >
           <Text>Pass</Text>
           {/* Replace with Icon */}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={() => cardStackRef.current?.swipeRight()} // Corrected onPress prop
+          onClick={() => cardStackRef.current?.swipeRight()} // Changed to onClick for web compatibility
         >
           <Text>Like</Text>
           {/* Replace with Icon */}
