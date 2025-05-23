@@ -1,20 +1,21 @@
 // Leggo/tsconfig.json
 {
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx", // More modern JSX transform
     "allowImportingTsExtensions": true,
     "strict": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["es2022", "dom"],
-    "module": "Node16",
-    "moduleResolution": "node16",
+    "lib": ["es2022", "dom"], // Ensure DOM is included for some RN libraries that might reference it
+    "module": "commonjs", // Changed from Node16
+    "moduleResolution": "node", // Changed from node16
     "noEmit": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true // Often helpful in React Native
   },
   "include": [
     "src/**/*.ts",
@@ -22,13 +23,17 @@
     "__tests__/**/*.ts",
     "__tests__/**/*.tsx",
     "index.js",
-    "App.tsx"
+    "App.tsx",
+    // Add your .d.ts files if they are not automatically picked up or if you want to be explicit
+    "src/types/ionicons.d.ts",
+    "src/types/react-native-vector-icons.d.ts"
   ],
   "exclude": [
     "node_modules",
     "babel.config.js",
     "metro.config.js",
     "jest.config.js",
+    "eslint.config.js", // Added eslint.config.js
     "android",
     "ios"
   ]

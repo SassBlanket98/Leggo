@@ -1,5 +1,5 @@
 // src/screens/auth/SignupScreen.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useAppStore } from '../../state/store.ts';
 import { authService } from '../../services/authService.ts';
@@ -14,7 +14,7 @@ const SignupScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState('');
   const loginUser = useAppStore(state => state.loginUser); // Use loginUser to set the session
   const navigation = useNavigation<SignupScreenNavigationProp>();
 
@@ -135,3 +135,7 @@ const styles = StyleSheet.create({
 });
 
 export default SignupScreen;
+function useState(arg0: string): [any, any] {
+  throw new Error('Function not implemented.');
+}
+

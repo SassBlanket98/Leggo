@@ -3,19 +3,18 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useAppStore } from '../state/store.ts'; // Adjusted path
-import { AppState } from '../state/store.ts'; // Import AppState, adjusted path
-import { View, Text, ActivityIndicator } from 'react-native'; // Import View and Text
+import { useAppStore, AppState } from '../state/store'; // Combined import
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 
 // Screen Imports
-import OnboardingScreen from '../screens/auth/OnboardingScreen.tsx';
-import LoginScreen from '../screens/auth/LoginScreen.tsx';
-import SignupScreen from '../screens/auth/SignupScreen.tsx';
-import DiscoverActivitiesScreen from '../screens/main/DiscoverActivitiesScreen.tsx';
-import ActivityDetailScreen from '../screens/main/ActivityDetailScreen.tsx';
-import MyPlannedActivitiesScreen from '../screens/main/MyPlannedActivitiesScreen.tsx';
-import CreateActivityScreen from '../screens/main/CreateActivityScreen.tsx';
-import { theme } from '../constants/theme.ts';
+import OnboardingScreen from '../screens/auth/OnboardingScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
+import SignupScreen from '../screens/auth/SignupScreen';
+import DiscoverActivitiesScreen from '../screens/main/DiscoverActivitiesScreen';
+import ActivityDetailScreen from '../screens/main/ActivityDetailScreen';
+import MyPlannedActivitiesScreen from '../screens/main/MyPlannedActivitiesScreen';
+import CreateActivityScreen from '../screens/main/CreateActivityScreen';
+import { theme } from '../constants/theme';
 import {
   AuthStackParamList,
   MainTabsParamList,
@@ -23,11 +22,12 @@ import {
   MyPlannedStackParamList,
   CreateActivityStackParamList,
   ProfileStackParamList,
-} from './navigationTypes.ts';
+} from './navigationTypes'; // Removed .ts from paths
+import { RouteProp } from '@react-navigation/native'; // For explicit route prop typing
 
 // Placeholder for Profile Screen
 const ProfileScreenPlaceholder = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  <View style={styles.placeholderContainer}>
     <Text>Profile Screen</Text>
   </View>
 );
@@ -73,7 +73,6 @@ function CreateActivityNavigator() {
   return (
     <CreateActivityStackNav.Navigator screenOptions={{ headerShown: false }}>
       <CreateActivityStackNav.Screen name="CreateActivity" component={CreateActivityScreen} />
-      {/* Add other screens specific to activity creation flow if any */}
     </CreateActivityStackNav.Navigator>
   );
 }
@@ -82,7 +81,6 @@ function ProfileNavigator() {
   return (
     <ProfileStackNav.Navigator screenOptions={{ headerShown: false }}>
       <ProfileStackNav.Screen name="Profile" component={ProfileScreenPlaceholder} />
-      {/* Add other screens like EditProfile, Settings etc. */}
     </ProfileStackNav.Navigator>
   );
 }
@@ -90,23 +88,15 @@ function ProfileNavigator() {
 function MainAppNavigator() {
   return (
     <MainTabs.Navigator
-      screenOptions={({ route }: { route: any }) => ({
-        headerShown: false, // Hide header for individual tabs, manage in stacks
+      screenOptions={({ route }: { route: RouteProp<MainTabsParamList, keyof MainTabsParamList> }) => ({ // Typed route
+        headerShown: false,
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.darkGray,
         tabBarStyle: {
           backgroundColor: theme.colors.background,
           borderTopColor: theme.colors.lightGray,
         },
-        tabBarIcon: ({
-          focused,
-          color,
-          size,
-        }: {
-          focused: boolean;
-          color: string;
-          size: number;
-        }) => {
+        tabBarIcon: ({ focused, color, size }) => { // Parameters are already typed by the context
           let iconName = '';
 
           if (route.name === 'DiscoverTab') {
@@ -118,7 +108,6 @@ function MainAppNavigator() {
           } else if (route.name === 'ProfileTab') {
             iconName = focused ? 'account-circle' : 'account-circle-outline';
           }
-          // You can return any component that you like here!
           return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },
       })}
@@ -160,17 +149,11 @@ function AuthNavigator() {
 const AppNavigator: React.FC = () => {
   const isAuthenticated = useAppStore((state: AppState) => state.isAuthenticated);
   const isLoadingAuth = useAppStore((state: AppState) => state.isLoadingAuth);
-  const checkAuthStatus = useAppStore((state: AppState) => state.checkAuthStatus);
-
-  React.useEffect(() => {
-    checkAuthStatus();
-  }, [checkAuthStatus]);
+  // checkAuthStatus is called in App.tsx, no need to call it again here unless specifically intended
 
   if (isLoadingAuth) {
-    // You can return a loading spinner here if you have a global one
-    // For now, returning null or a simple loading text
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
@@ -178,5 +161,19 @@ const AppNavigator: React.FC = () => {
 
   return isAuthenticated ? <MainAppNavigator /> : <AuthNavigator />;
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.background,
+  },
+  placeholderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+});
 
 export default AppNavigator;

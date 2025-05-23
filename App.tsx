@@ -1,23 +1,19 @@
-// Leggo/App.tsx (or your main entry file)
+// Leggo/App.tsx
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import AppNavigator from './src/navigation/AppNavigator.tsx';
+import AppNavigator from './src/navigation/AppNavigator'; // Removed .tsx
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useAppStore } from './src/state/store.ts';
+import { useAppStore, AppState } from './src/state/store'; // Combined import, removed .ts
 import { StatusBar } from 'expo-status-bar';
-import { theme } from './src/constants/theme.ts';
-import { AppState } from './src/state/store.ts'; // Import AppState
+import { theme } from './src/constants/theme'; // Removed .ts
 
 const App = () => {
   const checkAuthStatus = useAppStore((state: AppState) => state.checkAuthStatus);
-  const isLoadingAuth = useAppStore((state: AppState) => state.isLoadingAuth);
+  // isLoadingAuth is handled within AppNavigator now
 
   useEffect(() => {
     checkAuthStatus();
   }, [checkAuthStatus]);
-
-  // Optional: Could show a global loading spinner here while isLoadingAuth is true,
-  // but AppNavigator will handle its own loading/splash screen.
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

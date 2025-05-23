@@ -1,11 +1,11 @@
 // src/screens/auth/OnboardingScreen.tsx
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button as PaperButton } from 'react-native-paper'; // Aliased for clarity
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../../navigation/navigationTypes.ts'; // Assuming AuthStackParamList is defined
-import { theme } from '../../constants/theme.ts';
+import { AuthStackParamList } from '../../navigation/navigationTypes';
+import { theme } from '../../constants/theme';
 
 type OnboardingScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Onboarding'>;
 
@@ -17,21 +17,24 @@ const OnboardingScreen: React.FC = () => {
       <Text style={styles.title}>Welcome to Leggo!</Text>
       <Text style={styles.subtitle}>Discover and plan your next adventure.</Text>
       <View style={styles.buttonContainer}>
-        <Button
+        <PaperButton
           mode="contained"
           onPress={() => navigation.navigate('Login')}
-          color={theme.colors.primary}
+          style={styles.buttonSpacing}
+          labelStyle={styles.buttonLabel}
+          theme={{ colors: { primary: theme.colors.primary } }} // Ensure PaperButton uses your theme color
         >
           Login
-        </Button>
-        <Button
+        </PaperButton>
+        <PaperButton
           mode="contained"
           onPress={() => navigation.navigate('Signup')}
-          color={theme.colors.secondary}
+          style={styles.buttonSpacing}
+          labelStyle={styles.buttonLabel}
+          theme={{ colors: { primary: theme.colors.secondary } }} // Ensure PaperButton uses your theme color
         >
           Sign Up
-        </Button>
-        <Button color={theme.colors.secondary} children={undefined} />
+        </PaperButton>
       </View>
     </View>
   );
@@ -49,6 +52,7 @@ const styles = StyleSheet.create({
     ...theme.typography.h1,
     color: theme.colors.primary,
     marginBottom: theme.spacing.m,
+    textAlign: 'center',
   },
   subtitle: {
     ...theme.typography.body,
@@ -61,6 +65,10 @@ const styles = StyleSheet.create({
   },
   buttonSpacing: {
     marginVertical: theme.spacing.s,
+  },
+  buttonLabel: {
+    color: theme.colors.white, // Assuming you want white text on colored buttons
+    fontWeight: 'bold',
   }
 });
 
