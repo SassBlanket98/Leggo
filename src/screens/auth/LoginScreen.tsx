@@ -1,12 +1,13 @@
 // src/screens/auth/LoginScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import { useAppStore } from '../../state/store';
-import { authService } from '../../services/authService';
-import { theme } from '../../constants/theme';
+import { View, Text, TextInput, Button, Alert, ActivityIndicator } from 'react-native-web';
+import { useAppStore } from '../../state/store.ts';
+import { authService } from '../../services/authService.ts';
+import { theme } from '../../constants/theme.ts';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../../navigation/navigationTypes';
+import { AuthStackParamList } from '../../navigation/navigationTypes.ts';
 import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native/Libraries/Alert/Alert';
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
 

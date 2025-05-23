@@ -1,27 +1,21 @@
 // src/navigation/AppNavigator.tsx
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
-
-import { useAppStore } from '../state/store';
-import { theme } from '../constants/theme';
+import { useAppStore } from '../state/store.ts'; // Adjusted path
+import { AppState } from '../state/store.ts'; // Import AppState, adjusted path
+import { View, Text, ActivityIndicator } from 'react-native-web'; // Import View and Text
 
 // Screen Imports
-import OnboardingScreen from '../screens/auth/OnboardingScreen';
-import LoginScreen from '../screens/auth/LoginScreen';
-import SignupScreen from '../screens/auth/SignupScreen';
-import DiscoverActivitiesScreen from '../screens/main/DiscoverActivitiesScreen';
-import MyPlannedActivitiesScreen from '../screens/main/MyPlannedActivitiesScreen';
-import CreateActivityScreen from '../screens/main/CreateActivityScreen';
-import ActivityDetailScreen from '../screens/main/ActivityDetailScreen';
-// Placeholder for Profile Screen
-const ProfileScreenPlaceholder = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Profile Screen</Text>
-  </View>
-);
-
+import OnboardingScreen from '../screens/auth/OnboardingScreen.tsx';
+import LoginScreen from '../screens/auth/LoginScreen.tsx';
+import SignupScreen from '../screens/auth/SignupScreen.tsx';
+import DiscoverActivitiesScreen from '../screens/main/DiscoverActivitiesScreen.tsx';
+import ActivityDetailScreen from '../screens/main/ActivityDetailScreen.tsx';
+import MyPlannedActivitiesScreen from '../screens/main/MyPlannedActivitiesScreen.tsx';
+import CreateActivityScreen from '../screens/main/CreateActivityScreen.tsx';
+import { theme } from '../constants/theme.ts';
 import {
   AuthStackParamList,
   MainTabsParamList,
@@ -29,7 +23,14 @@ import {
   MyPlannedStackParamList,
   CreateActivityStackParamList,
   ProfileStackParamList,
-} from './navigationTypes';
+} from './navigationTypes.ts';
+
+// Placeholder for Profile Screen
+const ProfileScreenPlaceholder = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Profile Screen</Text>
+  </View>
+);
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const MainTabs = createBottomTabNavigator<MainTabsParamList>();
@@ -147,9 +148,9 @@ function AuthNavigator() {
 }
 
 const AppNavigator: React.FC = () => {
-  const isAuthenticated = useAppStore(state => state.isAuthenticated);
-  const isLoadingAuth = useAppStore(state => state.isLoadingAuth);
-  const checkAuthStatus = useAppStore(state => state.checkAuthStatus);
+  const isAuthenticated = useAppStore((state: AppState) => state.isAuthenticated);
+  const isLoadingAuth = useAppStore((state: AppState) => state.isLoadingAuth);
+  const checkAuthStatus = useAppStore((state: AppState) => state.checkAuthStatus);
 
   React.useEffect(() => {
     checkAuthStatus();
@@ -160,7 +161,7 @@ const AppNavigator: React.FC = () => {
     // For now, returning null or a simple loading text
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Loading authentication...</Text>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }

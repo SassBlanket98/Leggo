@@ -2,19 +2,33 @@
 {
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "strict": true, // Enforces all strict type-checking options (best practice) [16, 17]
-    "baseUrl": ".", // Base directory for module resolution (for path aliases)
-    "paths": {      // Defines path aliases for cleaner imports [13]
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["es2022", "dom"], // Ensure modern ES features and DOM types (e.g., for timers) are available.
-    // @react-native/typescript-config may provide this.
-    "moduleResolution": "node", // Standard module resolution strategy
-    "noEmit": true, // TypeScript only performs type-checking; Babel handles transpilation [15]
-    "resolveJsonModule": true, // Allows importing.json files
-    "esModuleInterop": true, // Enables compatibility with CommonJS modules
-    "skipLibCheck": true // Skips type checking of declaration files in node_modules for faster builds
+    "lib": ["es2022", "dom"],
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include":,
-  "exclude":
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "__tests__/**/*.ts",
+    "__tests__/**/*.tsx",
+    "index.js",
+    "App.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js",
+    "android",
+    "ios"
+  ]
 }

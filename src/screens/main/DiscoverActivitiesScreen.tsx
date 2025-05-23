@@ -1,13 +1,12 @@
 // src/screens/main/DiscoverActivitiesScreen.tsx
-import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Button } from 'react-native';
-import SwipeableCardStack, { CardContainerRef } from 'react-native-swipeable-card-stack';
-import ActivityCard from '../../components/activities/ActivityCard';
-import { useAppStore } from '../../state/store';
-import { Activity } from '../../types/activityTypes';
-import { theme } from '../../constants/theme';
-import { DiscoverScreenProps } from '../../navigation/navigationTypes'; // For navigation.navigate
-import Icon from 'react-native-vector-icons/Ionicons';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native-web';
+import { useAppStore } from '../../state/store.ts';
+import { Activity } from '../../types/activityTypes.ts';
+import ActivityCard from '../../components/activities/ActivityCard.tsx';
+import { theme } from '../../constants/theme.ts';
+import { DiscoverScreenProps } from '../../navigation/navigationTypes.ts'; // For navigation.navigate
+import { SwipeableCardStack, CardContainerRef } from 'react-native-swipeable-card-stack'; // Adjusted import
 
 const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities'>> = ({
   navigation,
@@ -15,8 +14,7 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
   const allActivities = useAppStore(state => state.allActivities);
   const interestedActivityIds = useAppStore(state => state.interestedActivityIds);
   const addInterestedActivity = useAppStore(state => state.addInterestedActivity);
-  const removeActivityFromAll = useAppStore(state => state.removeActivityFromAll); // New action to remove from discoverable pool
-
+  const removeActivityFromAll = useAppStore(state => state.removeActivityFromAll); // Assuming this exists and is used for swipe left
   const [isLoading, setIsLoading] = useState(true);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
@@ -25,29 +23,25 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
     return allActivities.filter(act => !interestedActivityIds.includes(act.id));
   }, [allActivities, interestedActivityIds]);
 
-  const cardStackRef = React.useRef<CardContainerRef>(null);
+  const cardStackRef = useRef<CardContainerRef>(null);
 
   useEffect(() => {
-    // Simulate loading activities initially or if they change
-    if (allActivities.length > 0) {
+    if (discoverableActivities.length > 0) {
       setIsLoading(false);
     }
-    // Reset index if discoverable activities list becomes empty or changes significantly
+    // Reset currentCardIndex when discoverableActivities changes, e.g., after all cards are swiped
     setCurrentCardIndex(0);
   }, [allActivities, discoverableActivities]);
 
   const handleSwipeRight = (activity: Activity) => {
-    console.log('Swiped right on:', activity.title);
     addInterestedActivity(activity.id);
-    // The library handles removing the card from its internal stack.
-    // We might want to remove it from `allActivities` if we don't want it to reappear
-    // or manage a separate "seen" list. For now, adding to interested is enough.
     setCurrentCardIndex(prev => prev + 1);
   };
 
   const handleSwipeLeft = (activity: Activity) => {
-    console.log('Swiped left on:', activity.title);
-    // Potentially mark as "not interested" or "seen" in the store
+    // Optionally, implement a way to "dismiss" an activity without adding to interested
+    // For now, just increment index. If you have a removeActivityFromAll or similar:
+    // removeActivityFromAll(activity.id); // Or some other logic for left swipe
     setCurrentCardIndex(prev => prev + 1);
   };
 
@@ -59,21 +53,18 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
-        <Text>Loading activities...</Text>
       </View>
     );
   }
 
-  if (
-    !discoverableActivities ||
-    discoverableActivities.length === 0 ||
-    currentCardIndex >= discoverableActivities.length
-  ) {
+  // Check if there are no more cards to show *after* filtering
+  if (discoverableActivities.length === 0 || currentCardIndex >= discoverableActivities.length) {
     return (
       <View style={styles.centered}>
-        <Text style={styles.noMoreCardsText}>No more activities to discover!</Text>
-        <Text style={styles.noMoreCardsSubtitle}>Check back later or suggest your own.</Text>
-        {/* Optionally, a button to refresh or go to create activity screen */}
+        <Text style={styles.noMoreCardsText}>No More Activities</Text>
+        <Text style={styles.noMoreCardsSubtitle}>
+          Check back later or try adjusting your preferences!
+        </Text>
       </View>
     );
   }
@@ -84,37 +75,30 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
         <SwipeableCardStack
           ref={cardStackRef}
           data={discoverableActivities.slice(currentCardIndex)} // Pass only remaining cards
-          renderCard={(item: Activity) => (
+          renderItem={(item: Activity) => (
             <ActivityCard activity={item} onPress={() => handleTapCard(item)} />
           )}
           onSwipeRight={handleSwipeRight}
           onSwipeLeft={handleSwipeLeft}
-          // onSwipeTop and onSwipeBottom can be added if needed
-          // Other props like animationType, disableTopSwipe, etc. can be configured.
-          // See react-native-swipeable-card-stack documentation for all options.
-          // Example:
-          // stackOffsetY={10}
-          // stackOffsetX={0}
-          // stackSize={3} // Number of cards visible in the stack
-          // infiniteSwipe={false}
-          // disableRightSwipe={false}
-          // disableLeftSwipe={false}
-          // cardContainerStyle={styles.cardStackStyle}
-          onStackEmpty={() => console.log('Stack is empty!')} // This might be where we show "No more cards"
+          stackSeparation={15}
+          stackScale={5}
+          style={styles.cardStackStyle}
         />
       </View>
       <View style={styles.actionButtonsContainer}>
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={() => cardStackRef.current?.swipeLeft()}
+          onPress={() => cardStackRef.current?.swipeLeft()} // Corrected onPress prop
         >
-          <Icon name="close-outline" size={36} color={theme.colors.error} />
+          <Text>Pass</Text>
+          {/* Replace with Icon */}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={() => cardStackRef.current?.swipeRight()}
+          onPress={() => cardStackRef.current?.swipeRight()} // Corrected onPress prop
         >
-          <Icon name="heart-outline" size={36} color={theme.colors.primary} />
+          <Text>Like</Text>
+          {/* Replace with Icon */}
         </TouchableOpacity>
       </View>
     </View>

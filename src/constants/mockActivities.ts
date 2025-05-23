@@ -1,5 +1,5 @@
 // src/constants/mockActivities.ts
-import { Activity } from '../types/activityTypes';
+import { Activity } from '../types/activityTypes.ts';
 
 export const MOCK_ACTIVITIES: Activity[] = [
   {

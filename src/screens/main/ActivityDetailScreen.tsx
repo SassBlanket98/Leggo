@@ -3,18 +3,21 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   ScrollView,
   Button,
   Alert,
   ActivityIndicator,
-} from 'react-native';
+  StyleSheet,
+} from 'react-native-web';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import { useAppStore } from '../../state/store';
-import { Activity } from '../../types/activityTypes';
-import { theme } from '../../constants/theme';
-import { DiscoverStackParamList, MyPlannedStackParamList } from '../../navigation/navigationTypes'; // Assuming these exist
+import { useAppStore } from '../../state/store.ts';
+import { Activity } from '../../types/activityTypes.ts';
+import { theme } from '../../constants/theme.ts';
+import {
+  DiscoverStackParamList,
+  MyPlannedStackParamList,
+} from '../../navigation/navigationTypes.ts'; // Assuming these exist
 
 // Combine ParamList types if this screen can be reached from multiple stacks with the same params
 type ActivityDetailRouteProp = RouteProp<

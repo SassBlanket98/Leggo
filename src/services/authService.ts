@@ -1,6 +1,6 @@
 // src/services/authService.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserSession } from '../types/authTypes';
+import { UserSession } from '../types/authTypes.ts';
 
 const USER_SESSION_KEY = '@LeggoApp:userSession';
 

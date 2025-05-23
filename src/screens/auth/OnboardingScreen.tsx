@@ -1,10 +1,11 @@
 // src/screens/auth/OnboardingScreen.tsx
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../../navigation/navigationTypes'; // Assuming AuthStackParamList is defined
-import { theme } from '../../constants/theme';
+import { AuthStackParamList } from '../../navigation/navigationTypes.ts'; // Assuming AuthStackParamList is defined
+import { theme } from '../../constants/theme.ts';
 
 type OnboardingScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Onboarding'>;
 

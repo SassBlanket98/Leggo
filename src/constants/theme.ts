@@ -24,11 +24,11 @@ export const theme = {
   typography: {
     h1: {
       fontSize: 32,
-      fontWeight: 'bold',
+      fontWeight: 'bold' as 'bold',
     },
     h2: {
       fontSize: 24,
-      fontWeight: 'bold',
+      fontWeight: 'bold' as 'bold',
     },
     body: {
       fontSize: 16,
@@ -38,7 +38,7 @@ export const theme = {
     },
     button: {
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: 'bold' as 'bold',
     },
   },
   borderRadius: {

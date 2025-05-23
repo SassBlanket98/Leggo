@@ -1,11 +1,11 @@
 // src/screens/main/MyPlannedActivitiesScreen.tsx
 import React, { useMemo } from 'react';
-import { View, Text, FlatList, StyleSheet, Alert } from 'react-native';
-import { useAppStore } from '../../state/store';
-import { Activity } from '../../types/activityTypes';
-import InterestedActivityRow from '../../components/activities/InterestedActivityRow';
-import { theme } from '../../constants/theme';
-import { MyPlannedScreenProps } from '../../navigation/navigationTypes';
+import { View, Text, FlatList, StyleSheet, Alert } from 'react-native-web'; // Reverted to react-native-web and will use type-only import for StyleSheet
+import { useAppStore } from '../../state/store.ts';
+import { Activity } from '../../types/activityTypes.ts';
+import InterestedActivityRow from '../../components/activities/InterestedActivityRow.tsx';
+import { theme } from '../../constants/theme.ts';
+import { MyPlannedScreenProps } from '../../navigation/navigationTypes.ts';
 
 const MyPlannedActivitiesScreen: React.FC<MyPlannedScreenProps<'MyPlannedActivitiesList'>> = ({
   navigation,
@@ -54,8 +54,8 @@ const MyPlannedActivitiesScreen: React.FC<MyPlannedScreenProps<'MyPlannedActivit
     <View style={styles.container}>
       <FlatList
         data={interestedActivities}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
+        keyExtractor={(item: Activity) => item.id}
+        renderItem={({ item }: { item: Activity }) => (
           <InterestedActivityRow
             activity={item}
             onPress={() => navigation.navigate('ActivityDetail', { activityId: item.id })}

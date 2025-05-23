@@ -1,9 +1,9 @@
 // src/components/activities/InterestedActivityRow.tsx
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Activity } from '../../types/activityTypes';
-import { theme } from '../../constants/theme';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native-web';
+import { Activity } from '../../types/activityTypes.ts';
+import { theme } from '../../constants/theme.ts';
+import Icon from 'react-native-vector-icons/Ionicons.ts';
 
 interface InterestedActivityRowProps {
   activity: Activity;
