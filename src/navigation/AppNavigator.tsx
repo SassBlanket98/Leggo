@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppStore } from '../state/store.ts'; // Adjusted path
 import { AppState } from '../state/store.ts'; // Import AppState, adjusted path
-import { View, Text, ActivityIndicator } from 'react-native-web'; // Import View and Text
+import { View, Text, ActivityIndicator } from 'react-native'; // Import View and Text
 
 // Screen Imports
 import OnboardingScreen from '../screens/auth/OnboardingScreen.tsx';

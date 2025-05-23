@@ -20,7 +20,7 @@
     "@react-navigation/native-stack": "^7.3.13",
     "@types/react-native-web": "^0.19.1",
     "expo-status-bar": "^2.2.3",
-    "react": "19.0.0",
+    "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-native": "0.79.2",
     "react-native-gesture-handler": "^2.25.0",
@@ -32,7 +32,6 @@
     "react-native-swipeable-card-stack": "^2.0.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0",
-    "react-navigation": "^5.0.0",
     "zustand": "^5.0.5"
   },
   "devDependencies": {

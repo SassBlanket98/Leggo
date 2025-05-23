@@ -1,7 +1,7 @@
 // Leggo/tsconfig.json
 {
-  "extends": "@react-native/typescript-config",
   "compilerOptions": {
+    "jsx": "react",
     "allowImportingTsExtensions": true,
     "strict": true,
     "baseUrl": ".",

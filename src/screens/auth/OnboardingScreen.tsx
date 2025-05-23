@@ -58,8 +58,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '80%',
-    marginVertical: theme.spacing.s,
   },
+  buttonSpacing: {
+    marginVertical: theme.spacing.s,
+  }
 });
 
 export default OnboardingScreen;

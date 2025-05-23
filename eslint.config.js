@@ -21,7 +21,6 @@ export default tseslint.config(
       'metro.config.js',
       'babel.config.js',
       'jest.config.js',
-      '.eslintrc.js', // if you are migrating from it
       '*.config.js', // if you have other .config.js files at root
     ],
   },
