@@ -139,6 +139,8 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
     'Other',
   ];
 
+  const DateTimePickerModalComponent = DateTimePickerModal as any;
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <Text style={styles.header}>Suggest a New Activity</Text>
@@ -198,7 +200,7 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
           {dateTime ? dateTime.toLocaleString() : 'Select Date and Time'}
         </Text>
       </TouchableOpacity>
-      <DateTimePickerModal
+      <DateTimePickerModalComponent
         isVisible={isDatePickerVisible}
         mode="datetime"
         onConfirm={handleConfirmDate}

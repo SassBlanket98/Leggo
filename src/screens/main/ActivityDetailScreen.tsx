@@ -5,31 +5,49 @@ import {
   Text,
   Image,
   ScrollView,
-  StyleSheet, // Ensure StyleSheet is imported from react-native
+  StyleSheet,
   ActivityIndicator,
   Button,
-  Alert, // Import Alert from react-native
+  Alert,
 } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import type { RouteProp } from '@react-navigation/core'; // Correct import for RouteProp
+// Removed direct import of useRoute and RouteProp if not used elsewhere for this specific case
+
 import { useAppStore } from '../../state/store.ts';
 import { Activity } from '../../types/activityTypes.ts';
 import { theme } from '../../constants/theme.ts';
+
+// Import the specific screen props type from your navigationTypes
+// This assumes ActivityDetailScreen is part of either DiscoverStack or MyPlannedStack
+// and you've defined corresponding props types like DiscoverScreenProps or MyPlannedScreenProps.
+
+// Let's use a more generic approach if it can be reached from multiple stacks,
+// or pick one if you know its primary stack.
+// For example, if using DiscoverStackParamList:
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
   DiscoverStackParamList,
   MyPlannedStackParamList,
-} from '../../navigation/navigationTypes.ts'; // Assuming these exist
+} from '../../navigation/navigationTypes.ts';
 
-// Combine ParamList types if this screen can be reached from multiple stacks with the same params
-type ActivityDetailRouteProp = RouteProp<
-  DiscoverStackParamList & MyPlannedStackParamList,
+// It seems your navigationTypes.ts already sets up CompositeScreenProps.
+// Let's refine the type for ActivityDetailScreen based on how it's used in AppNavigator.
+// In AppNavigator, ActivityDetail is a screen in DiscoverNavigator and MyPlannedNavigator.
+
+// This type represents the props passed when 'ActivityDetail' is a screen
+// in a NativeStack Navigator whose ParamList includes 'ActivityDetail'.
+type ActivityDetailScreenProps = NativeStackScreenProps<
+  DiscoverStackParamList & MyPlannedStackParamList, // Combine if parameters are identical
   'ActivityDetail'
 >;
 
-const ActivityDetailScreen: React.FC = () => {
-  const route = useRoute<ActivityDetailRouteProp>();
+// If ActivityDetailScreenProps is already well-defined in navigationTypes.ts, you could import that.
+// For now, let's define it locally for clarity.
+
+const ActivityDetailScreen: React.FC<ActivityDetailScreenProps> = ({ route }) => {
+  // Destructure route from props
   const { activityId } = route.params;
 
+  // ... rest of your component logic remains the same
   const getActivityById = (id: string) =>
     useAppStore.getState().allActivities.find(act => act.id === id);
   const addInterestedActivity = useAppStore(state => state.addInterestedActivity);
@@ -47,7 +65,7 @@ const ActivityDetailScreen: React.FC = () => {
     if (fetchedActivity) {
       setIsInterested(interestedActivityIds.includes(fetchedActivity.id));
     }
-  }, [activityId, interestedActivityIds]);
+  }, [activityId, interestedActivityIds, getActivityById]); // Added getActivityById to dependencies
 
   const handleInterested = () => {
     if (activity) {
@@ -108,8 +126,7 @@ const ActivityDetailScreen: React.FC = () => {
         <Text style={styles.label}>Location:</Text>
         <Text style={styles.infoText}>{activity.location}</Text>
         <Text style={styles.label}>Suggested by:</Text>
-        <Text style={styles.infoText}>{activity.creatorId}</Text>{' '}
-        {/* In a real app, resolve to a username */}
+        <Text style={styles.infoText}>{activity.creatorId}</Text>
         <View style={styles.buttonRow}>
           {!isInterested ? (
             <Button
@@ -149,7 +166,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 300, // Fixed height for detail image
+    height: 300,
     resizeMode: 'cover',
   },
   detailsContainer: {

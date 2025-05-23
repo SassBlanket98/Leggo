@@ -88,14 +88,14 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
       <View style={styles.actionButtonsContainer}>
         <TouchableOpacity
           style={styles.actionButton}
-          onClick={() => cardStackRef.current?.swipeLeft()} // Changed to onClick for web compatibility
+          onPress={() => cardStackRef.current?.swipeLeft()} // Changed to onClick for web compatibility
         >
           <Text>Pass</Text>
           {/* Replace with Icon */}
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionButton}
-          onClick={() => cardStackRef.current?.swipeRight()} // Changed to onClick for web compatibility
+          onPress={() => cardStackRef.current?.swipeRight()} // Changed to onClick for web compatibility
         >
           <Text>Like</Text>
           {/* Replace with Icon */}
