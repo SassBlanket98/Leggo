@@ -1,12 +1,10 @@
 import { getDefaultConfig } from 'metro-config';
-import { mergeConfig } from '@react-native/metro-config';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-/**
- * Metro configuration
- * https://reactnative.dev/docs/metro
- *
- * @type {import('@react-native/metro-config').MetroConfig}
- */
-const config = {};
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export default mergeConfig(getDefaultConfig(__dirname), config);
+export default (async () => {
+  const config = await getDefaultConfig(__dirname);
+  return config;
+})();

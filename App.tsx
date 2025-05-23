@@ -1,7 +1,7 @@
 // Leggo/App.tsx (or your main entry file)
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import AppNavigator from './src/navigation/AppNavigator.ts';
+import AppNavigator from './src/navigation/AppNavigator.tsx';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useAppStore } from './src/state/store.ts';
 import { StatusBar } from 'expo-status-bar';
