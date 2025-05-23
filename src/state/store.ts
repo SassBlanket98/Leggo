@@ -1,10 +1,10 @@
 // src/state/store.ts
 import { create, StateCreator } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { authService } from '../services/authService';
-import { UserSession } from '../types/authTypes';
-import { Activity, ActivityCategory } from '../types/activityTypes'; // Added ActivityCategory
-import { MOCK_ACTIVITIES } from '../constants/mockActivities'; // For initial data
+import { authService } from '../services/authService.js';
+import { UserSession } from '../types/authTypes.js';
+import { Activity, ActivityCategory } from '../types/activityTypes.js'; // Added ActivityCategory
+import { MOCK_ACTIVITIES } from '../constants/mockActivities.js'; // For initial data
 
 export interface AuthSlice {
   isAuthenticated: boolean;

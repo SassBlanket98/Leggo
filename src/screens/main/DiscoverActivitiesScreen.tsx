@@ -23,7 +23,8 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
     return allActivities.filter(act => !interestedActivityIds.includes(act.id));
   }, [allActivities, interestedActivityIds]);
 
-  const cardStackRef = useRef<React.ElementRef<typeof SwipeableCardStack>>(null);
+  // Explicitly type the ref to allow swipeLeft/swipeRight
+  const cardStackRef = useRef<any>(null);
 
   useEffect(() => {
     if (discoverableActivities.length > 0) {

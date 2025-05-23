@@ -1,7 +1,18 @@
 // src/navigation/navigationTypes.ts
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { StaticParamList } from '@react-navigation/native';
+
+// In React Navigation v7, these types need to be defined manually
+// Type for nested navigators in React Navigation v7
+type NavigatorScreenParams<ParamList> = {
+  screen?: keyof ParamList;
+  params?: ParamList[keyof ParamList];
+};
+
+// Type for composite screen props in React Navigation v7
+type CompositeScreenProps<ScreenProps, NavigatorProps> = ScreenProps & NavigatorProps;
+// For React Navigation v7, we need to ensure we're importing the types correctly
 
 // Auth Stack
 export type AuthStackParamList = {

@@ -44,11 +44,3 @@ class MainApplication : Application(), ReactApplication {
     }
   }
 }
-
-class MainActivity : ReactActivity() {
-  //... other code
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(null) // null for react-native-screens, or savedInstanceState if not using it
-  }
-  //...
-}

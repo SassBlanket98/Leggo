@@ -1,8 +1,8 @@
 // src/components/activities/ActivityCard.tsx
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { Activity } from '../../types/activityTypes';
-import { theme } from '../../constants/theme';
+import { Activity } from '../../types/activityTypes.ts';
+import { theme } from '../../constants/theme.ts';
 
 interface ActivityCardProps {
   activity: Activity;

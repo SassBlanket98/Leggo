@@ -4,11 +4,13 @@ import { UserSession } from '../types/authTypes.ts';
 
 const USER_SESSION_KEY = '@LeggoApp:userSession';
 
+const AsyncStorageAny = AsyncStorage as any;
+
 export const authService = {
   storeUserSession: async (session: UserSession): Promise<void> => {
     try {
       const jsonValue = JSON.stringify(session);
-      await AsyncStorage.setItem(USER_SESSION_KEY, jsonValue);
+      await AsyncStorageAny.setItem(USER_SESSION_KEY, jsonValue);
     } catch (e) {
       console.error('Failed to save user session to AsyncStorage', e);
       throw e; // Re-throw to handle it in the caller
@@ -17,7 +19,7 @@ export const authService = {
 
   getUserSession: async (): Promise<UserSession | null> => {
     try {
-      const jsonValue = await AsyncStorage.getItem(USER_SESSION_KEY);
+      const jsonValue = await AsyncStorageAny.getItem(USER_SESSION_KEY);
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       console.error('Failed to fetch user session from AsyncStorage', e);
@@ -27,7 +29,7 @@ export const authService = {
 
   removeUserSession: async (): Promise<void> => {
     try {
-      await AsyncStorage.removeItem(USER_SESSION_KEY);
+      await AsyncStorageAny.removeItem(USER_SESSION_KEY);
     } catch (e) {
       console.error('Failed to remove user session from AsyncStorage', e);
       throw e;

@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint. --ext.js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint. --ext.js,.jsx,.ts,.tsx --fix",
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\" \"*.{js,json,md}\" \"!ios/**\" \"!android/**\"",
     "check-types": "tsc --noEmit"
   },
