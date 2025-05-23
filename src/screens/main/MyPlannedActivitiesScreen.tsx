@@ -5,7 +5,7 @@ import { useAppStore } from '../../state/store';
 import { Activity } from '../../types/activityTypes';
 import InterestedActivityRow from '../../components/activities/InterestedActivityRow';
 import { theme } from '../../constants/theme';
-import { MyPlannedScreenProps } from '../../navigation/navigationTypes'; // For navigation.navigate
+import { MyPlannedScreenProps } from '../../navigation/navigationTypes';
 
 const MyPlannedActivitiesScreen: React.FC<MyPlannedScreenProps<'MyPlannedActivitiesList'>> = ({
   navigation,
@@ -17,13 +17,25 @@ const MyPlannedActivitiesScreen: React.FC<MyPlannedScreenProps<'MyPlannedActivit
   const interestedActivities = useMemo(() => {
     return interestedActivityIds
       .map(id => allActivities.find(activity => activity.id === id))
-      .filter((activity): activity is Activity => activity !== undefined); // Type guard to filter out undefined
+      .filter((activity): activity is Activity => activity !== undefined);
   }, [interestedActivityIds, allActivities]);
 
   const handleUnmark = (activityId: string, activityTitle: string) => {
     Alert.alert(
       'Remove Activity',
       `Are you sure you want to remove "${activityTitle}" from your planned activities?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes, Remove',
+          onPress: () => removeInterestedActivity(activityId),
+          style: 'destructive',
+        },
+      ],
+      { cancelable: true },
     );
   };
 
@@ -83,7 +95,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.m,
     paddingTop: theme.spacing.l,
     paddingBottom: theme.spacing.m,
-    backgroundColor: theme.colors.background, // To cover items during scroll if sticky
+    backgroundColor: theme.colors.background,
     color: theme.colors.primary,
   },
 });

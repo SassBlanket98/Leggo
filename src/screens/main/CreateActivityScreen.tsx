@@ -1,28 +1,39 @@
 // src/screens/main/CreateActivityScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  TouchableOpacity,
+  Platform,
+  ActivityIndicator,
+} from 'react-native';
 import { useAppStore } from '../../state/store';
-import { Activity, ActivityCategory } from '../../types/activityTypes'; // Assuming ActivityCategory is defined in activityTypes.ts
+import { Activity, ActivityCategory, ACTIVITY_CATEGORIES } from '../../types/activityTypes';
 import { theme } from '../../constants/theme';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { CreateActivityTabProps } from '../../navigation/navigationTypes'; // For navigation
 
-// Define categories in types/activityTypes.ts or constants
-// export type ActivityCategory = 'Outdoor' | 'Social' | 'Food' | 'Learning' | 'Arts' | 'Sports' | 'Other';
-const categories: ActivityCategory =;
-
-const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> = ({ navigation }) => {
+const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> = ({
+  navigation,
+}) => {
   const addActivityToStore = useAppStore(state => state.addActivity);
+  const apiAddActivity = useAppStore(state => state.apiAddActivity);
+  const currentUser = useAppStore(state => state.currentUser);
 
-  const = useState('');
-  const = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [category, setCategory] = useState<ActivityCategory | undefined>(undefined);
   const [location, setLocation] = useState('');
-  const = useState<Date | undefined>(undefined);
+  const [dateTime, setDateTime] = useState<Date | undefined>(undefined);
   const [imageUrl, setImageUrl] = useState(''); // For MVP, user inputs URL
 
-  const = useState(false);
-  const = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const showDatePicker = () => setDatePickerVisibility(true);
   const hideDatePicker = () => setDatePickerVisibility(false);
@@ -32,16 +43,37 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
   };
 
   const validateForm = (): boolean => {
-    if (!title.trim()) { Alert.alert('Validation Error', 'Title is required.'); return false; }
-    if (!description.trim()) { Alert.alert('Validation Error', 'Description is required.'); return false; }
-    if (!category) { Alert.alert('Validation Error', 'Category is required.'); return false; }
-    if (!location.trim()) { Alert.alert('Validation Error', 'Location is required.'); return false; }
-    if (!dateTime) { Alert.alert('Validation Error', 'Date and Time are required.'); return false; }
-    if (!imageUrl.trim()) { Alert.alert('Validation Error', 'Image URL is required (for MVP).'); return false; }
+    if (!title.trim()) {
+      Alert.alert('Validation Error', 'Title is required.');
+      return false;
+    }
+    if (!description.trim()) {
+      Alert.alert('Validation Error', 'Description is required.');
+      return false;
+    }
+    if (!category) {
+      Alert.alert('Validation Error', 'Category is required.');
+      return false;
+    }
+    if (!location.trim()) {
+      Alert.alert('Validation Error', 'Location is required.');
+      return false;
+    }
+    if (!dateTime) {
+      Alert.alert('Validation Error', 'Date and Time are required.');
+      return false;
+    }
+    if (!imageUrl.trim()) {
+      Alert.alert('Validation Error', 'Image URL is required (for MVP).');
+      return false;
+    }
     // Basic URL validation (very simple)
-    if (!imageUrl.startsWith('http://') &&!imageUrl.startsWith('https://')) {
-        Alert.alert('Validation Error', 'Please enter a valid Image URL (starting with http:// or https://).');
-        return false;
+    if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+      Alert.alert(
+        'Validation Error',
+        'Please enter a valid Image URL (starting with http:// or https://).',
+      );
+      return false;
     }
     return true;
   };
@@ -50,7 +82,7 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
     if (!validateForm()) return;
     setIsSubmitting(true);
 
-    const newActivity: Omit<Activity, 'id' | 'creatorId'> = {
+    const newActivityData: Omit<Activity, 'id' | 'creatorId'> = {
       title,
       description,
       category: category!, // Assert category is defined due to validation
@@ -59,26 +91,24 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
       imageUrl,
     };
 
-    // In a real app, this would be an API call
-    // For MVP, we directly add to the store
-    // The store's addActivity action will generate an ID and mock creatorId
     try {
-        const createdActivity = await useAppStore.getState().apiAddActivity(newActivity); // Assuming apiAddActivity in store
-        Alert.alert('Success', `Activity "${createdActivity.title}" created!`);
-        // Reset form
-        setTitle('');
-        setDescription('');
-        setCategory(undefined);
-        setLocation('');
-        setDateTime(undefined);
-        setImageUrl('');
-        // Optionally navigate away, e.g., to Discover or MyPlannedActivities
-        // navigation.navigate('DiscoverTab', { screen: 'DiscoverActivities' });
+      // The apiAddActivity function in the store handles ID generation and creatorId
+      const createdActivity = await apiAddActivity(newActivityData);
+      Alert.alert('Success', `Activity "${createdActivity.title}" created!`);
+      // Reset form
+      setTitle('');
+      setDescription('');
+      setCategory(undefined);
+      setLocation('');
+      setDateTime(undefined);
+      setImageUrl('');
+      // Optionally navigate away
+      // navigation.navigate('DiscoverTab', { screen: 'DiscoverActivities' });
     } catch (error) {
-        Alert.alert('Error', 'Could not create activity.');
-        console.error("Error creating activity:", error);
+      Alert.alert('Error', 'Could not create activity.');
+      console.error('Error creating activity:', error);
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -87,33 +117,58 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
       <Text style={styles.header}>Suggest a New Activity</Text>
 
       <Text style={styles.label}>Title</Text>
-      <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="Activity Title" placeholderTextColor={theme.colors.darkGray}/>
+      <TextInput
+        style={styles.input}
+        value={title}
+        onChangeText={setTitle}
+        placeholder="Activity Title"
+        placeholderTextColor={theme.colors.darkGray}
+      />
 
       <Text style={styles.label}>Description</Text>
-      <TextInput style={[styles.input, styles.textArea]} value={description} onChangeText={setDescription} placeholder="Detailed description of the activity" multiline numberOfLines={4} placeholderTextColor={theme.colors.darkGray}/>
+      <TextInput
+        style={[styles.input, styles.textArea]}
+        value={description}
+        onChangeText={setDescription}
+        placeholder="Detailed description of the activity"
+        multiline
+        numberOfLines={4}
+        placeholderTextColor={theme.colors.darkGray}
+      />
 
       <Text style={styles.label}>Category</Text>
-      {/* Simple Picker using TouchableOpacity buttons for MVP */}
       <View style={styles.categoryContainer}>
-        {categories.map(cat => (
+        {ACTIVITY_CATEGORIES.map(cat => (
           <TouchableOpacity
             key={cat}
-            style={}
+            style={[styles.categoryButton, category === cat && styles.categoryButtonSelected]}
             onPress={() => setCategory(cat)}
           >
-            <Text style={}>{cat}</Text>
+            <Text
+              style={[
+                styles.categoryButtonText,
+                category === cat && styles.categoryButtonTextSelected,
+              ]}
+            >
+              {cat}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-
       <Text style={styles.label}>Location</Text>
-      <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder="e.g., Central Park" placeholderTextColor={theme.colors.darkGray}/>
+      <TextInput
+        style={styles.input}
+        value={location}
+        onChangeText={setLocation}
+        placeholder="e.g., Central Park"
+        placeholderTextColor={theme.colors.darkGray}
+      />
 
       <Text style={styles.label}>Date & Time</Text>
       <TouchableOpacity onPress={showDatePicker} style={styles.datePickerButton}>
         <Text style={styles.datePickerButtonText}>
-          {dateTime? dateTime.toLocaleString() : 'Select Date & Time'}
+          {dateTime ? dateTime.toLocaleString() : 'Select Date & Time'}
         </Text>
       </TouchableOpacity>
       <DateTimePickerModal
@@ -125,15 +180,29 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
       />
 
       <Text style={styles.label}>Image URL</Text>
-      <TextInput style={styles.input} value={imageUrl} onChangeText={setImageUrl} placeholder="https://example.com/image.jpg" keyboardType="url" placeholderTextColor={theme.colors.darkGray}/>
-      <Text style={styles.imagePlaceholderInfo}>For MVP: Please provide a direct URL to an image.</Text>
-
+      <TextInput
+        style={styles.input}
+        value={imageUrl}
+        onChangeText={setImageUrl}
+        placeholder="https://example.com/image.jpg"
+        keyboardType="url"
+        autoCapitalize="none"
+        placeholderTextColor={theme.colors.darkGray}
+      />
+      <Text style={styles.imagePlaceholderInfo}>
+        For MVP: Please provide a direct URL to an image.
+      </Text>
 
       <View style={styles.submitButtonContainer}>
-        {isSubmitting? (
-            <ActivityIndicator size="large" color={theme.colors.primary} />
+        {isSubmitting ? (
+          <ActivityIndicator size="large" color={theme.colors.primary} />
         ) : (
-            <Button title="Suggest Activity" onPress={handleSubmit} color={theme.colors.primary} disabled={isSubmitting} />
+          <Button
+            title="Suggest Activity"
+            onPress={handleSubmit}
+            color={theme.colors.primary}
+            disabled={isSubmitting}
+          />
         )}
       </View>
     </ScrollView>
@@ -150,13 +219,13 @@ const styles = StyleSheet.create({
     paddingBottom: theme.spacing.xl * 2, // Extra padding for scroll
   },
   header: {
-   ...theme.typography.h1,
+    ...theme.typography.h1,
     color: theme.colors.primary,
     marginBottom: theme.spacing.l,
     textAlign: 'center',
   },
   label: {
-   ...theme.typography.body,
+    ...theme.typography.body,
     fontWeight: 'bold',
     color: theme.colors.text,
     marginTop: theme.spacing.m,
@@ -168,7 +237,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: theme.spacing.xs,
     paddingHorizontal: theme.spacing.m,
-    paddingVertical: theme.spacing.m, // Increased padding for better touch
+    paddingVertical: Platform.OS === 'ios' ? theme.spacing.m : theme.spacing.s, // Adjust padding for Android
     fontSize: theme.typography.body.fontSize,
     color: theme.colors.text,
     marginBottom: theme.spacing.xs,
@@ -189,12 +258,15 @@ const styles = StyleSheet.create({
     borderRadius: theme.spacing.l, // Pill shape
     marginRight: theme.spacing.s,
     marginBottom: theme.spacing.s,
+    borderWidth: 1,
+    borderColor: theme.colors.mediumGray,
   },
   categoryButtonSelected: {
     backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primaryDark,
   },
   categoryButtonText: {
-   ...theme.typography.body,
+    ...theme.typography.body,
     color: theme.colors.text,
   },
   categoryButtonTextSelected: {
@@ -209,19 +281,21 @@ const styles = StyleSheet.create({
     padding: theme.spacing.m,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: theme.spacing.xs,
   },
   datePickerButtonText: {
-   ...theme.typography.body,
+    ...theme.typography.body,
     color: theme.colors.text,
   },
   imagePlaceholderInfo: {
-   ...theme.typography.caption,
+    ...theme.typography.caption,
     color: theme.colors.darkGray,
     marginBottom: theme.spacing.m,
+    marginTop: theme.spacing.xs,
   },
   submitButtonContainer: {
     marginTop: theme.spacing.xl,
-  }
+  },
 });
 
 export default CreateActivityScreen;
