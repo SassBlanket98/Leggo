@@ -88,7 +88,12 @@ function ProfileNavigator() {
 function MainAppNavigator() {
   return (
     <MainTabs.Navigator
-      screenOptions={({ route }: { route: RouteProp<MainTabsParamList, keyof MainTabsParamList> }) => ({ // Typed route
+      screenOptions={({
+        route,
+      }: {
+        route: RouteProp<MainTabsParamList, keyof MainTabsParamList>;
+      }) => ({
+        // Typed route
         headerShown: false,
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.darkGray,
@@ -96,7 +101,16 @@ function MainAppNavigator() {
           backgroundColor: theme.colors.background,
           borderTopColor: theme.colors.lightGray,
         },
-        tabBarIcon: ({ focused, color, size }) => { // Parameters are already typed by the context
+        tabBarIcon: ({
+          focused,
+          color,
+          size,
+        }: {
+          focused: boolean;
+          color: string;
+          size: number;
+        }) => {
+          // Explicitly typed parameters
           let iconName = '';
 
           if (route.name === 'DiscoverTab') {
@@ -108,6 +122,7 @@ function MainAppNavigator() {
           } else if (route.name === 'ProfileTab') {
             iconName = focused ? 'account-circle' : 'account-circle-outline';
           }
+          // Ensure MaterialCommunityIcons is correctly typed or the custom .d.ts is working/removed
           return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },
       })}
@@ -173,7 +188,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 });
 
 export default AppNavigator;

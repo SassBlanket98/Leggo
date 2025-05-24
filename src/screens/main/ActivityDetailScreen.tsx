@@ -1,5 +1,5 @@
 // src/screens/main/ActivityDetailScreen.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -219,11 +219,4 @@ const styles = StyleSheet.create({
 });
 
 export default ActivityDetailScreen;
-function useState<T>(undefined: undefined): [any, any] {
-  throw new Error('Function not implemented.');
-}
-
-function useEffect(arg0: () => void, arg1: any[]) {
-  throw new Error('Function not implemented.');
-}
 
