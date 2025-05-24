@@ -1,20 +1,19 @@
 // src/screens/main/DiscoverActivitiesScreen.tsx
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
-import { useAppStore, AppState } from '../../state/store'; // Added AppState
+import { useAppStore, AppState } from '../../state/store';
 import { Activity } from '../../types/activityTypes';
 import ActivityCard from '../../components/activities/ActivityCard';
 import { theme } from '../../constants/theme';
 import { DiscoverScreenProps } from '../../navigation/navigationTypes';
-import SwipeableCardStack from 'react-native-swipeable-card-stack'; // Assuming named export
+import SwipeableCardStack from 'react-native-swipeable-card-stack';
 
-const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities'>> = ({
-  navigation,
-}) => {
+const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities'>> = props => {
+  const { navigation } = props; // Destructure from props
+
   const allActivities = useAppStore((state: AppState) => state.allActivities);
   const interestedActivityIds = useAppStore((state: AppState) => state.interestedActivityIds);
   const addInterestedActivity = useAppStore((state: AppState) => state.addInterestedActivity);
-  // const removeActivityFromAll = useAppStore((state: AppState) => state.removeActivityFromAll); // Keep if used
 
   const [isLoading, setIsLoading] = useState(true);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -23,38 +22,31 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
     return allActivities.filter(act => !interestedActivityIds.includes(act.id));
   }, [allActivities, interestedActivityIds]);
 
-  const cardStackRef = useRef<SwipeableCardStack>(null); // Typed the ref
+  const cardStackRef = useRef<SwipeableCardStack>(null);
 
   useEffect(() => {
-    // Ensure activities are loaded, Zustand store initializes them
     if (allActivities.length > 0) {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-    setCurrentCardIndex(0); // Reset index when discoverable activities change
-  }, [allActivities]); // Depend on allActivities to re-evaluate loading and discoverable
+    setCurrentCardIndex(0);
+  }, [allActivities]);
 
-
-  // This effect handles the case where initially allActivities might be empty
-  // and then get populated by the store.
   useEffect(() => {
-    if (discoverableActivities.length > 0 || allActivities.length > 0) { // Check allActivities too
+    if (discoverableActivities.length > 0 || allActivities.length > 0) {
       setIsLoading(false);
     }
   }, [discoverableActivities, allActivities]);
 
-
   const handleSwipeRight = (activity: Activity) => {
-    if (activity) { // Ensure activity is defined
-        addInterestedActivity(activity.id);
-        setCurrentCardIndex(prev => prev + 1);
+    if (activity) {
+      addInterestedActivity(activity.id);
+      setCurrentCardIndex(prev => prev + 1);
     }
   };
 
-  const handleSwipeLeft = (activity: Activity) => { // Ensure activity is defined
+  const handleSwipeLeft = (activity: Activity) => {
     if (activity) {
-        // For now, just advancing the index.
-        // If you implement 'dismiss', you'd call removeActivityFromAll(activity.id) or similar.
-        setCurrentCardIndex(prev => prev + 1);
+      setCurrentCardIndex(prev => prev + 1);
     }
   };
 
@@ -70,29 +62,23 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
     );
   }
 
-  if (discoverableActivities.length === 0) { // Check discoverable, not currentCardIndex here
+  if (discoverableActivities.length === 0) {
     return (
       <View style={styles.centered}>
         <Text style={styles.noMoreCardsText}>No More Activities</Text>
-        <Text style={styles.noMoreCardsSubtitle}>
-          Check back later or suggest something new!
-        </Text>
+        <Text style={styles.noMoreCardsSubtitle}>Check back later or suggest something new!</Text>
       </View>
     );
   }
 
-  // This condition handles when all discoverable cards have been swiped
   if (currentCardIndex >= discoverableActivities.length && discoverableActivities.length > 0) {
     return (
-        <View style={styles.centered}>
-            <Text style={styles.noMoreCardsText}>That's all for now!</Text>
-            <Text style={styles.noMoreCardsSubtitle}>
-                You've seen all available activities.
-            </Text>
-        </View>
+      <View style={styles.centered}>
+        <Text style={styles.noMoreCardsText}>That's all for now!</Text>
+        <Text style={styles.noMoreCardsSubtitle}>You've seen all available activities.</Text>
+      </View>
     );
   }
-
 
   return (
     <View style={styles.container}>
@@ -100,19 +86,21 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
         <SwipeableCardStack
           ref={cardStackRef}
           data={discoverableActivities.slice(currentCardIndex)}
-          renderItem={( activity: Activity ) => ( // item is an Activity
-            <ActivityCard activity={activity} onPress={() => handleTapCard(activity)} />
-          )}
-          onSwipedRight={(itemIndex) => handleSwipeRight(discoverableActivities[currentCardIndex + itemIndex])}
-          onSwipedLeft={(itemIndex) => handleSwipeLeft(discoverableActivities[currentCardIndex + itemIndex])}
+          renderItem={(
+            item: Activity, // item is an Activity
+          ) => <ActivityCard activity={item} onPress={() => handleTapCard(item)} />}
+          onSwipedRight={itemIndex =>
+            handleSwipeRight(discoverableActivities[currentCardIndex + itemIndex])
+          }
+          onSwipedLeft={itemIndex =>
+            handleSwipeLeft(discoverableActivities[currentCardIndex + itemIndex])
+          }
           stackSeparation={15}
           stackScale={5}
           style={styles.cardStackStyle}
-          loop={false} // Important: Set to false to not loop when out of cards
+          loop={false}
           onSwipedAll={() => {
-            // This callback is useful if you don't want to manage currentCardIndex manually for "no more cards"
-            // For now, our currentCardIndex logic handles it.
-            console.log("Swiped all cards in the current stack data");
+            console.log('Swiped all cards in the current stack data');
           }}
         />
       </View>
@@ -121,7 +109,7 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
           style={styles.actionButton}
           onPress={() => {
             if (cardStackRef.current && discoverableActivities.length > currentCardIndex) {
-                 cardStackRef.current.swipeLeft();
+              cardStackRef.current.swipeLeft();
             }
           }}
         >
@@ -131,7 +119,7 @@ const DiscoverActivitiesScreen: React.FC<DiscoverScreenProps<'DiscoverActivities
           style={styles.actionButton}
           onPress={() => {
             if (cardStackRef.current && discoverableActivities.length > currentCardIndex) {
-                cardStackRef.current.swipeRight();
+              cardStackRef.current.swipeRight();
             }
           }}
         >
@@ -154,10 +142,10 @@ const styles = StyleSheet.create({
     paddingTop: theme.spacing.m,
   },
   cardStackStyle: {
-     flex: 1, // Ensure the stack takes up available space
-     width: '100%',
-     alignItems: 'center',
-     justifyContent: 'center',
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   centered: {
     flex: 1,
@@ -180,9 +168,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingVertical: theme.spacing.l, // Increased padding
+    paddingVertical: theme.spacing.l,
     paddingHorizontal: theme.spacing.xl,
-    backgroundColor: theme.colors.background, // Match background
+    backgroundColor: theme.colors.background,
     borderTopWidth: 1,
     borderTopColor: theme.colors.lightGray,
   },
@@ -190,21 +178,21 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     paddingVertical: theme.spacing.m,
     paddingHorizontal: theme.spacing.l,
-    borderRadius: 30, // More circular
-    elevation: 4, // Slightly more shadow
+    borderRadius: 30,
+    elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 120, // Ensure buttons have a decent size
+    minWidth: 120,
   },
-   actionButtonText: {
+  actionButtonText: {
     ...theme.typography.button,
-    color: theme.colors.primary, // Or choose a different color
+    color: theme.colors.primary,
     fontSize: 18,
-  }
+  },
 });
 
 export default DiscoverActivitiesScreen;

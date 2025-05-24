@@ -13,17 +13,15 @@ import {
   Alert,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { useAppStore } from '../../state/store.ts';
-import { Activity, ActivityCategory } from '../../types/activityTypes.ts';
-import { theme } from '../../constants/theme.ts';
-import { CreateActivityTabProps } from '../../navigation/navigationTypes.ts'; // For navigation
+import { useAppStore } from '../../state/store';
+import { Activity, ActivityCategory } from '../../types/activityTypes';
+import { theme } from '../../constants/theme';
+import { CreateActivityTabProps } from '../../navigation/navigationTypes';
 
-const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> = ({
-  navigation,
-}) => {
+const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> = props => {
+  const { navigation } = props; // Destructure from props
+
   const addActivityToStore = useAppStore(state => state.addActivity);
-  // Assuming apiAddActivity is for a real backend. For mock, we might just use addActivityToStore.
-  // const apiAddActivity = useAppStore(state => state.apiAddActivity);
   const currentUser = useAppStore(state => state.currentUser);
 
   const [title, setTitle] = useState('');
@@ -31,7 +29,7 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
   const [category, setCategory] = useState<ActivityCategory | undefined>(undefined);
   const [location, setLocation] = useState('');
   const [dateTime, setDateTime] = useState<Date | undefined>(undefined);
-  const [imageUrl, setImageUrl] = useState(''); // For MVP, user inputs URL
+  const [imageUrl, setImageUrl] = useState('');
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,7 +66,6 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
       Alert.alert('Validation Error', 'Please enter an image URL.');
       return false;
     }
-    // Basic URL validation (very simple)
     if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
       Alert.alert(
         'Validation Error',
@@ -81,11 +78,10 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
 
   const handleSubmit = async () => {
     if (!validateForm()) {
-      return; // Stop submission if validation fails
+      return;
     }
     setIsSubmitting(true);
 
-    // Ensure currentUser is available, otherwise assign a default or handle error
     if (!currentUser) {
       Alert.alert('Error', 'User not found. Cannot create activity.');
       setIsSubmitting(false);
@@ -95,33 +91,31 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
     const newActivityData: Omit<Activity, 'id' | 'creatorId'> = {
       title,
       description,
-      category: category!, // Category is validated, so it should exist
+      category: category!,
       location,
-      dateTime: dateTime!.toISOString(), // DateTime is validated
+      dateTime: dateTime!.toISOString(),
       imageUrl,
     };
 
     try {
-      // For MVP, we'll use a mock ID generation and add directly to store
       const mockId = `activity-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
       const activityWithId: Activity = {
         ...newActivityData,
         id: mockId,
-        creatorId: currentUser.userId, // Use current user's ID
+        creatorId: currentUser.userId,
       };
 
-      addActivityToStore(activityWithId); // Add to Zustand store
+      addActivityToStore(activityWithId);
 
       Alert.alert('Success', 'Activity created successfully!');
-      // Reset form or navigate away
       setTitle('');
       setDescription('');
       setCategory(undefined);
       setLocation('');
       setDateTime(undefined);
       setImageUrl('');
-      // Consider navigating to Discover or MyPlanned tab
-      navigation.navigate('CreateActivity'); // Or to a success/confirmation screen if you have one
+      // Example: Navigate to the Discover tab after creation
+      // navigation.getParent()?.navigate('DiscoverTab');
     } catch (error) {
       console.error('Failed to create activity:', error);
       Alert.alert('Error', 'Failed to create activity. Please try again.');
@@ -205,7 +199,7 @@ const CreateActivityScreen: React.FC<CreateActivityTabProps<'CreateActivity'>> =
         mode="datetime"
         onConfirm={handleConfirmDate}
         onCancel={hideDatePicker}
-        minimumDate={new Date()} // Optional: prevent past dates
+        minimumDate={new Date()}
       />
 
       <Text style={styles.label}>Image URL</Text>
@@ -240,7 +234,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: theme.spacing.m,
-    paddingBottom: theme.spacing.xl * 2, // Extra padding for scroll
+    paddingBottom: theme.spacing.xl * 2,
   },
   header: {
     ...theme.typography.h1,
@@ -256,19 +250,19 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.s,
   },
   input: {
-    backgroundColor: theme.colors.cardBackground, // Slightly different background for inputs
+    backgroundColor: theme.colors.cardBackground,
     borderColor: theme.colors.lightGray,
     borderWidth: 1,
     borderRadius: theme.spacing.xs,
     paddingHorizontal: theme.spacing.m,
-    paddingVertical: Platform.OS === 'ios' ? theme.spacing.m : theme.spacing.s, // Adjust padding for Android
+    paddingVertical: Platform.OS === 'ios' ? theme.spacing.m : theme.spacing.s,
     fontSize: theme.typography.body.fontSize,
     color: theme.colors.text,
     marginBottom: theme.spacing.xs,
   },
   textArea: {
     height: 100,
-    textAlignVertical: 'top', // Android
+    textAlignVertical: 'top',
   },
   categoryContainer: {
     flexDirection: 'row',
@@ -279,7 +273,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.lightGray,
     paddingVertical: theme.spacing.s,
     paddingHorizontal: theme.spacing.m,
-    borderRadius: theme.spacing.l, // Pill shape
+    borderRadius: theme.spacing.l,
     marginRight: theme.spacing.s,
     marginBottom: theme.spacing.s,
     borderWidth: 1,

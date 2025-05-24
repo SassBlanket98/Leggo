@@ -1,15 +1,17 @@
 // src/screens/main/MyPlannedActivitiesScreen.tsx
 import React, { useMemo } from 'react';
-import { View, Text, FlatList, StyleSheet, Alert } from 'react-native'; // Reverted to react-native-web and will use type-only import for StyleSheet
-import { useAppStore } from '../../state/store.ts';
-import { Activity } from '../../types/activityTypes.ts';
-import InterestedActivityRow from '../../components/activities/InterestedActivityRow.tsx';
-import { theme } from '../../constants/theme.ts';
-import { MyPlannedScreenProps } from '../../navigation/navigationTypes.ts';
+import { View, Text, FlatList, StyleSheet, Alert } from 'react-native';
+import { useAppStore } from '../../state/store';
+import { Activity } from '../../types/activityTypes';
+import InterestedActivityRow from '../../components/activities/InterestedActivityRow';
+import { theme } from '../../constants/theme';
+import { MyPlannedScreenProps } from '../../navigation/navigationTypes';
 
-const MyPlannedActivitiesScreen: React.FC<MyPlannedScreenProps<'MyPlannedActivitiesList'>> = ({
-  navigation,
-}) => {
+const MyPlannedActivitiesScreen: React.FC<
+  MyPlannedScreenProps<'MyPlannedActivitiesList'>
+> = props => {
+  const { navigation } = props; // Destructure from props
+
   const interestedActivityIds = useAppStore(state => state.interestedActivityIds);
   const allActivities = useAppStore(state => state.allActivities);
   const removeInterestedActivity = useAppStore(state => state.removeInterestedActivity);
